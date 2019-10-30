@@ -72,7 +72,7 @@ class GamesPerDay with ChangeNotifier {
         var tempInfo = gameInfo['gameInfo'] as List<Object>;
         tempInfo.forEach((item) => {
               id = (item as Map<String, Object>)['id'],
-              winner = (item as Map<String, Object>)['winner'],
+              //winner = (item as Map<String, Object>)['winner'],
               //gamesInfoList.add(GameInfo(team1: SingleTeam(id))),
               //id = (item as GameInfo).id,
               //team1 = (item as GameInfo).team1.teamName,
@@ -91,7 +91,9 @@ class GamesPerDay with ChangeNotifier {
     } catch (error) {
       throw error;
     }
+
   }
+
 
   void filterDayGames(int dayOfWeek) {
     _allGames.forEach((date, result) {
