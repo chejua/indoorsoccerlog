@@ -19,9 +19,10 @@ class _NewGameState extends State<NewGame> {
 
   @override
   void initState() {
-    index1 = 0;
-    index2 = 1;
-    winner = index1;
+    final teams = Provider.of<Teams>(context, listen: false);
+    index1 = teams.previousTeam1;
+    index2 = teams.previousTeam2;
+    winner = teams.previousWinner;
     super.initState();
   }
 
@@ -79,8 +80,7 @@ class _NewGameState extends State<NewGame> {
           teamDataListTeamOne[index1].id,
           teamDataListTeamOne[index1].color,
           teamDataListTeamOne[index1].teamName,
-          goals: teamDataListTeamOne[index1].goals
-         ),
+          goals: teamDataListTeamOne[index1].goals),
       team2: SingleTeam(
           teamDataListTeamOne[index2].id,
           teamDataListTeamOne[index2].color,
@@ -89,7 +89,10 @@ class _NewGameState extends State<NewGame> {
       winner: teamDataListTeamOne[winner],
     ));
     Navigator.of(context).pop();
+
     teamData.resetTeamGoals();
+    teamData.saveLastTeamsThatPlay(teamDataListTeamOne[index1].id,
+        teamDataListTeamOne[index2].id, teamDataListTeamOne[winner].id);
   }
 
   @override
