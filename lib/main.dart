@@ -6,6 +6,7 @@ import './providers/games_record.dart';
 import './providers/games_per_day.dart';
 import './screens/games_overview_screen.dart';
 import './screens/game_dates_screen.dart';
+import './screens/games_detail_info.dart';
 
 void main() => runApp(MyApp());
 
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
           routes: {
              '/': (ctx) => GamesOverviewScreen(),
              GameDatesScreen.routeName: (ctx) => GameDatesScreen(),
+             GamesDetailInfo.routeName: (ctx) => GamesDetailInfo()
           },
         ));
   }

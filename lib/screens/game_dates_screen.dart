@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:soccer_log/screens/games_detail_info.dart';
 
 import '../providers/games_per_day.dart';
 
@@ -15,9 +16,12 @@ class GameDatesScreen extends StatelessWidget {
     final dayOfWeek =
         routeArgs == 'Mondays' ? DateTime.monday : DateTime.wednesday;
     var gamesData = Provider.of<GamesPerDay>(context, listen: false);
-    gamesData.fetchAndSetGames();
-    gamesData.filterDayGames(dayOfWeek);
-    var games = gamesData.dayGames;
+  //   gamesData.fetchAndSetGames();
+  //   gamesData.filterDayGames(dayOfWeek);
+  //  var games = gamesData.dayGames;
+  gamesData.fetchGameDates(dayOfWeek);
+   //gamesData.filterByDayOfThatWeek(dayOfWeek);
+   var games = gamesData.dayGames;
     return Scaffold(
       appBar: AppBar(
         title: Text(routeArgs),
@@ -52,6 +56,8 @@ class GameDatesScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15)),
                     alignment: Alignment(0.0, 0.0),
                   ),
+                  onTap: () => Navigator.of(context)
+                      .pushNamed(GamesDetailInfo.routeName),
                 );
               }).toList(),
             ),

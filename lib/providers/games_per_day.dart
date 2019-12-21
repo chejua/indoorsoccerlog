@@ -12,12 +12,20 @@ class GamesPerDay with ChangeNotifier {
 
   Map<DateTime, List<GameInfo>> _dayGames = {};
 
+  //Map<String, Map<String, List<dynamic>>> _gamesData = {};
+
+  Map<String, Object> _gamesData = {};
+
   Map<DateTime, List<GameInfo>> get allGames {
     return {..._allGames};
   }
 
-  Map<DateTime, List<GameInfo>> get dayGames {
+  Map<DateTime, List<Object>> get dayGames {
     return {..._dayGames};
+  }
+
+  Map<String, Map<String, List<dynamic>>> get gamesData {
+    return {..._gamesData};
   }
 
   Future<void> addGames(List<GameInfo> games) async {
@@ -54,6 +62,26 @@ class GamesPerDay with ChangeNotifier {
     }
     _allGames[date] = games;
   }
+  
+   Future<void> fetchGameDates(int day) async {
+    const url = 'https://indoor-soccer-log.firebaseio.com/games.json';
+    try {
+      final response = await http.get(url);
+      final extractedData = json.decode(response.body) as Map<String, Object>;
+
+      if (extractedData == null) {
+        return;
+      }
+      
+      _gamesData = extractedData;
+
+      filterByDayOfThatWeek(day);
+      //notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+
+  }
 
   Future<void> fetchAndSetGames() async {
     const url = 'https://indoor-soccer-log.firebaseio.com/games.json';
@@ -61,6 +89,8 @@ class GamesPerDay with ChangeNotifier {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final Map<DateTime, List<GameInfo>> games = {};
+
+      final Map<String, Map<String, List<dynamic>>> gamesData = {};
 
       if (extractedData == null) {
         return;
@@ -79,9 +109,6 @@ class GamesPerDay with ChangeNotifier {
               
             });
 
-    
-        
-
         games[DateTime.parse(gameInfo['date'] as String)] = List<GameInfo>();
 
         //games[DateTime.parse(gameInfo['date'] as String)] = List.from(gameInfo['gameInfo'] as List<GameInfo>);
@@ -94,12 +121,22 @@ class GamesPerDay with ChangeNotifier {
 
   }
 
-
   void filterDayGames(int dayOfWeek) {
     _allGames.forEach((date, result) {
       if (date.weekday == dayOfWeek) {
         _dayGames[date] = result;
       }
+    });
+  }
+
+  void filterByDayOfThatWeek(int dayOfWeek) {
+    _gamesData.forEach((key, map) {
+      var gameMap = map as Map<String, Object>;
+       DateTime date = DateTime.parse(gameMap["date"]);
+      if (date.weekday == dayOfWeek) {
+        var data = (gameMap["gameInfo"] as List<Object>);
+        print(data[0]);
+      }     
     });
   }
 }

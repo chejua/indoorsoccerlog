@@ -66,13 +66,17 @@ class Teams with ChangeNotifier {
   // }
 
   void addGoal(int id) {
-    _teams[id].goals++;
-    notifyListeners();
+    if (_teams[id].goals < 3) {
+      _teams[id].goals++;
+      notifyListeners();
+    }
   }
 
   void subtraGoal(int id) {
-    _teams[id].goals--;
-    notifyListeners();
+    if (_teams[id].goals > -1) {
+      _teams[id].goals--;
+      notifyListeners();
+    }
   }
 
   void saveLastTeamsThatPlay(int teamOne, int teamTwo, int winner) {
@@ -84,13 +88,13 @@ class Teams with ChangeNotifier {
       _teamTwoIndex = 1;
     } else if (teamOne == 1 && teamTwo == 0) {
       _teamTwoIndex = 2;
-    }  else if (teamOne == 1 && teamTwo == 2) {
+    } else if (teamOne == 1 && teamTwo == 2) {
       _teamTwoIndex = 0;
     } else if (teamOne == 2 && teamTwo == 0) {
       _teamTwoIndex = 1;
     } else if (teamOne == 2 && teamTwo == 1) {
       _teamTwoIndex = 0;
-    } 
+    }
 
     _lastWinner = winner;
   }

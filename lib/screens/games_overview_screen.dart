@@ -83,7 +83,30 @@ class GamesOverviewScreen extends StatelessWidget {
           FlatButton(
             child: Text('Save All'),
             onPressed: () {
-              saveGamesForRecord(context, games);
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Submit Games'),
+                    content: const Text(
+                        'This will clear the current table and submit the games'),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: const Text('CANCEL'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      FlatButton(
+                        child: const Text('ACCEPT'),
+                        onPressed: () {
+                          saveGamesForRecord(context, games);
+                        },
+                      )
+                    ],
+                  );
+                },
+              );
             },
           ),
         ],
