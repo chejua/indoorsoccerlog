@@ -12,9 +12,7 @@ class GamesPerDay with ChangeNotifier {
 
   Map<DateTime, List<GameInfo>> _dayGames = {};
 
-  //Map<String, Map<String, List<dynamic>>> _gamesData = {};
-
-  Map<String, Object> _gamesData = {};
+  Map<String, dynamic> _gamesData = {};
 
   Map<DateTime, List<GameInfo>> get allGames {
     return {..._allGames};
@@ -24,14 +22,13 @@ class GamesPerDay with ChangeNotifier {
     return {..._dayGames};
   }
 
-  Map<String, Map<String, List<dynamic>>> get gamesData {
+  Map<String, dynamic> get gamesData {
     return {..._gamesData};
   }
 
   Future<void> addGames(List<GameInfo> games) async {
     DateTime date = DateTime.now();
     //String stringDate =  DateFormat.yMd().format(date);
-
     // set to firebase here
     const url = 'https://indoor-soccer-log.firebaseio.com/games.json';
     try {
@@ -53,34 +50,34 @@ class GamesPerDay with ChangeNotifier {
                       'winnerColor': game.winner.color.toString(),
                       'winnerName': game.winner.teamName,
                       'winnerGoals': game.winner.goals,
-                      
                     })
                 .toList(),
           }));
     } catch (error) {
       print(error);
     }
-    _allGames[date] = games;
+    //_allGames[date] = games;
   }
-  
-   Future<void> fetchGameDates(int day) async {
+
+  Future<void> fetchGameDatesOnly(int day) async {
     const url = 'https://indoor-soccer-log.firebaseio.com/games.json';
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, Object>;
-
       if (extractedData == null) {
         return;
       }
-      
-      _gamesData = extractedData;
 
-      filterByDayOfThatWeek(day);
-      //notifyListeners();
+      extractedData.forEach((k, v) {
+        final Map<String, dynamic> dataGame = v as Map<String, dynamic>;
+        _gamesData[dataGame['date']] = dataGame['gameInfo'];
+      });
+
+      //filterByDayOfThatWeek(day);
+      notifyListeners();
     } catch (error) {
       throw error;
     }
-
   }
 
   Future<void> fetchAndSetGames() async {
@@ -106,7 +103,6 @@ class GamesPerDay with ChangeNotifier {
               //gamesInfoList.add(GameInfo(team1: SingleTeam(id))),
               //id = (item as GameInfo).id,
               //team1 = (item as GameInfo).team1.teamName,
-              
             });
 
         games[DateTime.parse(gameInfo['date'] as String)] = List<GameInfo>();
@@ -118,7 +114,6 @@ class GamesPerDay with ChangeNotifier {
     } catch (error) {
       throw error;
     }
-
   }
 
   void filterDayGames(int dayOfWeek) {
@@ -132,11 +127,17 @@ class GamesPerDay with ChangeNotifier {
   void filterByDayOfThatWeek(int dayOfWeek) {
     _gamesData.forEach((key, map) {
       var gameMap = map as Map<String, Object>;
-       DateTime date = DateTime.parse(gameMap["date"]);
+      DateTime date = DateTime.parse(gameMap["date"]);
       if (date.weekday == dayOfWeek) {
-        var data = (gameMap["gameInfo"] as List<Object>);
+        var data = (gameMap["gameInfo"] as List<dynamic>);
         print(data[0]);
-      }     
+        data.map((item) => GameInfo(
+            id: item['id'],
+            team1:
+                SingleTeam(item['teamOneId'], Colors.blue, item['teamOneName']),
+            team2: SingleTeam(item['teamOneId'], Colors.blue, 'teamName'),
+            winner: SingleTeam(item['teamOneId'], Colors.blue, 'teamName')));
+      }
     });
   }
 }

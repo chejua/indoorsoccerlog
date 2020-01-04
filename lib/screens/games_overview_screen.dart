@@ -101,6 +101,7 @@ class GamesOverviewScreen extends StatelessWidget {
                         child: const Text('ACCEPT'),
                         onPressed: () {
                           saveGamesForRecord(context, games);
+                          Navigator.of(context).pop();
                         },
                       )
                     ],
