@@ -26,6 +26,25 @@ class GamesPerDay with ChangeNotifier {
     return {..._gamesData};
   }
 
+  List<Map<String, String>> getGamesPerDay(String key) {
+    List<Map<String, String>> gameinfo = [];
+
+    var games = _gamesData[key] as List<dynamic>;
+    games.forEach((item) {
+      var gameData = item as Map<String, dynamic>;
+      gameinfo.add({
+        'teamOneName': gameData['teamOneName'].toString(),
+        'teamOneGoals': gameData['teamOneGoals'].toString(),
+        'teamTwoName': gameData['teamTwoName'].toString(),
+        'teamTwoGoals': gameData['teamTwoGoals'].toString(),
+        'winnerName': gameData['winnerName'].toString(),
+        'winnerGoals': gameData['winnerGoals'].toString()
+      });
+    });
+
+    return gameinfo;
+  }
+
   Future<void> addGames(List<GameInfo> games) async {
     DateTime date = DateTime.now();
     //String stringDate =  DateFormat.yMd().format(date);

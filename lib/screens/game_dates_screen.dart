@@ -73,7 +73,7 @@ class GameDatesScreen extends StatelessWidget {
                               alignment: Alignment(0.0, 0.0),
                             ),
                             onTap: () => Navigator.of(context)
-                                .pushNamed(GamesDetailInfo.routeName),
+                                .pushNamed(GamesDetailInfo.routeName, arguments: key),
                           );
                         }).toList(),
                       ),
