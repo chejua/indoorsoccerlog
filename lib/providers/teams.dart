@@ -1,38 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
-class SingleTeam {
-  final int id;
-  Color color;
-  final String teamName;
-  int goals;
-  final bool myTeam;
+import '../models/single_team.dart';
 
-  SingleTeam(this.id, this.color, this.teamName, {this.goals = 0, this.myTeam});
-}
+
 
 class Teams with ChangeNotifier {
   List<SingleTeam> _teams = [
     SingleTeam(0, Colors.yellow, "Team 1"),
     SingleTeam(1, Colors.green, "Team 2"),
-    SingleTeam(2, Colors.blue, "Team 3"),
+    SingleTeam(2, Colors.grey, "Team 3"),
   ];
 
   List<SingleTeam> _possibleTeams = [];
 
-  int _teamOneIndex = 0;
-  int _teamTwoIndex = 1;
+  int _previousTeam1Index = 0;
+  int _previousTeam2Index = 1;
   int _lastWinner = 0;
 
   int get previousTeam1 {
-    return _teamOneIndex;
+    return _previousTeam1Index;
   }
 
   int get previousTeam2 {
-    return _teamTwoIndex;
+    return _previousTeam2Index;
   }
 
-  int get previousWinner {
+  int get lastWinner {
     return _lastWinner;
   }
 
@@ -49,24 +43,9 @@ class Teams with ChangeNotifier {
     _teams[teamIndex].color = color;
     notifyListeners();
   }
-
-  // void switchTeamOne() {
-  //   if (teamOneIndex == _teams.length - 1) {
-  //     teamOneIndex = 0;
-  //   } else {
-  //     teamOneIndex++;
-  //   }
-  // }
-
-  // void filterPossibleTeams(int teamOneIndex, int teamTwoIndex) {
-  //   _teams.forEach((team) => {
-  //         if (team.id == teamOneIndex || team.id == teamTwoIndex)
-  //           {_possibleTeams.add(team)}
-  //       });
-  // }
-
+  
   void addGoal(int id) {
-    if (_teams[id].goals < 3) {
+    if (_teams[id].goals < 2) {
       _teams[id].goals++;
       notifyListeners();
     }
@@ -79,27 +58,27 @@ class Teams with ChangeNotifier {
     }
   }
 
-  void saveLastTeamsThatPlay(int teamOne, int teamTwo, int winner) {
-    _teamOneIndex = winner;
+  void saveLastTeamsThatPlay(int teamOneIndex, int teamTwoIndex, int winnerIndex) {
+    _previousTeam1Index = winnerIndex;
 
-    if (teamOne == 0 && teamTwo == 1) {
-      _teamTwoIndex = 2;
-    } else if (teamOne == 0 && teamTwo == 2) {
-      _teamTwoIndex = 1;
-    } else if (teamOne == 1 && teamTwo == 0) {
-      _teamTwoIndex = 2;
-    } else if (teamOne == 1 && teamTwo == 2) {
-      _teamTwoIndex = 0;
-    } else if (teamOne == 2 && teamTwo == 0) {
-      _teamTwoIndex = 1;
-    } else if (teamOne == 2 && teamTwo == 1) {
-      _teamTwoIndex = 0;
+    if (teamOneIndex == 0 && teamTwoIndex == 1) {
+      _previousTeam2Index = 2;
+    } else if (teamOneIndex == 0 && teamTwoIndex == 2) {
+      _previousTeam2Index = 1;
+    } else if (teamOneIndex == 1 && teamTwoIndex == 0) {
+      _previousTeam2Index = 2;
+    } else if (teamOneIndex == 1 && teamTwoIndex == 2) {
+      _previousTeam2Index = 0;
+    } else if (teamOneIndex == 2 && teamTwoIndex == 0) {
+      _previousTeam2Index = 1;
+    } else if (teamOneIndex == 2 && teamTwoIndex == 1) {
+      _previousTeam2Index = 0;
     }
 
-    _lastWinner = winner;
+    _lastWinner = winnerIndex;
   }
 
   void resetTeamGoals() {
-    _teams.forEach((teams) => {teams.goals = 0});
+    _teams.forEach((teams) => teams.goals = 0);
   }
 }

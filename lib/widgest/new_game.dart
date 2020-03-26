@@ -6,6 +6,7 @@ import '../providers/teams.dart';
 import '../models/game_info.dart';
 import '../providers/games_record.dart';
 import '../widgest/score_board.dart';
+import '../models/single_team.dart';
 
 class NewGame extends StatefulWidget {
   @override
@@ -22,19 +23,24 @@ class _NewGameState extends State<NewGame> {
     final teams = Provider.of<Teams>(context, listen: false);
     index1 = teams.previousTeam1;
     index2 = teams.previousTeam2;
-    winner = teams.previousWinner;
+    winner = teams.lastWinner;
     super.initState();
   }
 
   Widget _buildFirstTeam(List<SingleTeam> teams) {
     return GestureDetector(
       onTap: () {
+        int tempIndex = index1;
+        if (index1 == teams.length - 1) {
+          tempIndex = 0;
+        } else {
+          tempIndex++;
+        }
+        if (tempIndex == index2) {
+          tempIndex++;
+        }
         setState(() {
-          if (index1 == teams.length - 1) {
-            index1 = 0;
-          } else {
-            index1++;
-          }
+          index1 = tempIndex;
         });
       },
       child: StackTeamSelector(teams[index1]),
@@ -44,12 +50,17 @@ class _NewGameState extends State<NewGame> {
   Widget _buildSecondTeam(List<SingleTeam> teams) {
     return GestureDetector(
       onTap: () {
+        int tempIndex = index2;
+        if (index2 == teams.length - 1) {
+          tempIndex = 0;
+        } else {
+          tempIndex++;
+        }
+        if (tempIndex == index1) {
+          tempIndex++;
+        }
         setState(() {
-          if (index2 == teams.length - 1) {
-            index2 = 0;
-          } else {
-            index2++;
-          }
+          index2 = tempIndex;
         });
       },
       child: StackTeamSelector(teams[index2]),
@@ -73,33 +84,33 @@ class _NewGameState extends State<NewGame> {
 
   void _submitGameResult() {
     final teamData = Provider.of<Teams>(context, listen: false);
-    final teamDataListTeamOne = teamData.teams;
+    final teams = teamData.teams;
     Provider.of<GamesRecord>(context, listen: false).addGameRecord(GameInfo(
       id: DateTime.now().toIso8601String(),
       team1: SingleTeam(
-          teamDataListTeamOne[index1].id,
-          teamDataListTeamOne[index1].color,
-          teamDataListTeamOne[index1].teamName,
-          goals: teamDataListTeamOne[index1].goals),
+          teams[index1].id,
+          teams[index1].color,
+          teams[index1].teamName,
+          goals: teams[index1].goals),
       team2: SingleTeam(
-          teamDataListTeamOne[index2].id,
-          teamDataListTeamOne[index2].color,
-          teamDataListTeamOne[index2].teamName,
-          goals: teamDataListTeamOne[index2].goals),
-      winner: teamDataListTeamOne[winner],
+          teams[index2].id,
+          teams[index2].color,
+          teams[index2].teamName,
+          goals: teams[index2].goals),
+      winner: teams[winner],
     ));
     Navigator.of(context).pop();
 
     teamData.resetTeamGoals();
-    teamData.saveLastTeamsThatPlay(teamDataListTeamOne[index1].id,
-        teamDataListTeamOne[index2].id, teamDataListTeamOne[winner].id);
+    teamData.saveLastTeamsThatPlay(teams[index1].id,
+        teams[index2].id, teams[winner].id);
   }
 
   @override
   Widget build(BuildContext context) {
-    final teamData = Provider.of<Teams>(context, listen: false);
+    final teamData = Provider.of<Teams>(context);
     final teamDataListTeamOne = teamData.teams;
-    final teamDataListTeamTwo = [...teamDataListTeamOne];
+    final teamDataListTeamTwo = teamData.teams;
     return Card(
       elevation: 5,
       child: Column(

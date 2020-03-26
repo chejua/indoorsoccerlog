@@ -6,13 +6,12 @@ import '../providers/teams.dart';
 class ScoreBoard extends StatelessWidget {
 
   final teamId;
-
-
+  
   ScoreBoard(this.teamId);
   
   @override
   Widget build(BuildContext context) {
-     final teamData = Provider.of<Teams>(context);
+     final teamData = Provider.of<Teams>(context, listen: false);
      final teamDataList = teamData.teams;
      return Container(
       child: Row(

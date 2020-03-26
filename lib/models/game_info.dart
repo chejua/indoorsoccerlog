@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../providers/teams.dart';
+import '../models/single_team.dart';
 
 class GameInfo {
   final String id;

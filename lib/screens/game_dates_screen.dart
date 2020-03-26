@@ -11,8 +11,9 @@ class GameDatesScreen extends StatelessWidget {
   static const routeName = '/game-dates';
 
   Future<void> _refreshGameDates(BuildContext context, int day) async {
-    await Provider.of<GamesPerDay>(context, listen: false)
-        .fetchGameDatesOnly(day);
+    await Provider.of<GamesPerDay>(context, listen: false).fetchGameIdAndDate();
+    // await Provider.of<GamesPerDay>(context, listen: false)
+    //     .fetchGameDatesOnly(day);
   }
 
   @override
@@ -21,21 +22,12 @@ class GameDatesScreen extends StatelessWidget {
     final routeArgs = ModalRoute.of(context).settings.arguments as String;
     final dayOfWeek =
         routeArgs == 'Mondays' ? DateTime.monday : DateTime.saturday;
-    //var gamesData = Provider.of<GamesPerDay>(context, listen: false);
-    //gamesData.fetchGameDatesOnly(dayOfWeek);
-    //   gamesData.fetchAndSetGames();
-    //   gamesData.filterDayGames(dayOfWeek);
-    //  var games = gamesData.dayGames;
-    //gamesData.fetchGameDates(dayOfWeek);
-    //gamesData.filterByDayOfThatWeek(dayOfWeek);
-    //var games = gamesData.gamesData;
-    //var games = gamesData.gamesData;
     return Scaffold(
       appBar: AppBar(
         title: Text(routeArgs),
       ),
       body: FutureBuilder(
-        future: _refreshGameDates(context ,dayOfWeek),
+        future: _refreshGameDates(context, dayOfWeek),
         builder: (ctx, snapshot) => snapshot.connectionState ==
                 ConnectionState.waiting
             ? Center(
@@ -52,12 +44,12 @@ class GameDatesScreen extends StatelessWidget {
                           mainAxisSpacing: 20,
                         ),
                         padding: const EdgeInsets.all(25),
-                        children: gamesDataa.gamesData.keys.map((key) {
+                        children: gamesDataa.gamesIdAndDate.keys.map((key) {
                           return InkWell(
                             child: Container(
                               padding: const EdgeInsets.all(15),
                               child: Text(
-                                DateFormat.yMd().format(DateTime.parse(key)),
+                                DateFormat.yMd().format(DateTime.parse(gamesDataa.gamesIdAndDate[key])),
                                 style: TextStyle(fontSize: 25.0),
                               ),
                               decoration: BoxDecoration(
@@ -72,8 +64,9 @@ class GameDatesScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(15)),
                               alignment: Alignment(0.0, 0.0),
                             ),
-                            onTap: () => Navigator.of(context)
-                                .pushNamed(GamesDetailInfo.routeName, arguments: key),
+                            onTap: () => Navigator.of(context).pushNamed(
+                                GamesDetailInfo.routeName,
+                                arguments: key),
                           );
                         }).toList(),
                       ),
