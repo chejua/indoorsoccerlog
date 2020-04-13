@@ -49,7 +49,7 @@ class GamesDrawer extends StatelessWidget {
               }),
             ),
             Divider(
-              color: Colors.purple,
+              color: Colors.grey,
             ),
             Expanded(
               child: buildListTile('Wednesday', Icons.calendar_today, () {

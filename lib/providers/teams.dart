@@ -7,8 +7,8 @@ import '../models/single_team.dart';
 
 class Teams with ChangeNotifier {
   List<SingleTeam> _teams = [
-    SingleTeam(0, Colors.yellow, "Team 1"),
-    SingleTeam(1, Colors.green, "Team 2"),
+    SingleTeam(0, Colors.blue, "Team 1"),
+    SingleTeam(1, Colors.orange, "Team 2"),
     SingleTeam(2, Colors.grey, "Team 3"),
   ];
 

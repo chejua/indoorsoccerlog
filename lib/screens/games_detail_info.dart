@@ -126,8 +126,8 @@ class GamesDetailInfo extends StatelessWidget {
                             SizedBox(
                               height: 50,
                             ),
-                            _buildChipWithTotalInfo('Total Games Played 25'),
-                            _buildChipWithTotalInfo('Total Goals Scored 10'),
+                            _buildChipWithTotalInfo('Total Games Played ${gamesData.totalGames}'),
+                            _buildChipWithTotalInfo('Total Goals Scored ${gamesData.totalGoals}'),
                           ],
                         ),
                       ),

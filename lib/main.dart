@@ -29,6 +29,12 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Soccer Log',
           //home: GamesOverviewScreen(),
+          theme: ThemeData(
+            primaryColor: Color(0xFF1B5E20),
+            secondaryHeaderColor: Colors.orange,
+            accentColor: Color(0xFF4CAF50),
+            scaffoldBackgroundColor: Colors.green,
+          ),
           initialRoute: '/',
           routes: {
             '/': (ctx) => GamesOverviewScreen(),

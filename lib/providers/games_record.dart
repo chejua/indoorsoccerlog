@@ -15,7 +15,7 @@ class GamesRecord with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> clearGameRecords() async {
+  void clearGameRecords() {
     _games.clear();
     notifyListeners();
   }

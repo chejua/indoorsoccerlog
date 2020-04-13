@@ -151,7 +151,7 @@ class _NewGameState extends State<NewGame> {
           ),
           RaisedButton(
             child: Text("Submit"),
-            color: Colors.deepPurple,
+            color: Theme.of(context).accentColor,
             onPressed: () => _submitGameResult(),
           )
         ],

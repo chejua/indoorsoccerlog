@@ -22,6 +22,17 @@ class GamesPerDay with ChangeNotifier {
     return _teamsOfTheDay;
   }
 
+  int _totalGoals;
+  int _totalGames;
+
+  int get totalGoals {
+    return _totalGoals;
+  }
+
+  int get totalGames {
+    return _totalGames;
+  }
+
   Map<String, String> get gamesIdAndDate {
     return _gamesIdandDate;
   }
@@ -36,25 +47,6 @@ class GamesPerDay with ChangeNotifier {
 
   Map<String, dynamic> get gamesData {
     return {..._gamesData};
-  }
-
-  List<Map<String, String>> getGamesPerDay(String key) {
-    List<Map<String, String>> gameinfo = [];
-
-    var games = _gamesData[key] as List<dynamic>;
-    games.forEach((item) {
-      var gameData = item as Map<String, dynamic>;
-      gameinfo.add({
-        'teamOneName': gameData['teamOneName'].toString(),
-        'teamOneGoals': gameData['teamOneGoals'].toString(),
-        'teamTwoName': gameData['teamTwoName'].toString(),
-        'teamTwoGoals': gameData['teamTwoGoals'].toString(),
-        'winnerName': gameData['winnerName'].toString(),
-        'winnerGoals': gameData['winnerGoals'].toString()
-      });
-    });
-
-    return gameinfo;
   }
 
   Future<void> addGames(
@@ -93,28 +85,6 @@ class GamesPerDay with ChangeNotifier {
     } catch (error) {
       print(error);
     }
-    //_allGames[date] = games;
-  }
-
-  Future<void> fetchGameDatesOnly(int day) async {
-    const url = 'https://indoor-soccer-log.firebaseio.com/games.json';
-    try {
-      final response = await http.get(url);
-      final extractedData = json.decode(response.body) as Map<String, Object>;
-      if (extractedData == null) {
-        return;
-      }
-
-      extractedData.forEach((k, v) {
-        final Map<String, dynamic> dataGame = v as Map<String, dynamic>;
-        _gamesData[dataGame['date']] = dataGame['gameInfo'];
-      });
-
-      //filterByDayOfThatWeek(day);
-      notifyListeners();
-    } catch (error) {
-      throw error;
-    }
   }
 
   Future<void> fetchGameIdAndDate() async {
@@ -150,6 +120,7 @@ class GamesPerDay with ChangeNotifier {
       }
 
       Map<String, dynamic> gameInfo = {};
+      List<dynamic> totalGames = [];
 
       extractedData.forEach((id, values) {
         if (id == 'teams') {
@@ -161,15 +132,34 @@ class GamesPerDay with ChangeNotifier {
           });
         } else if (id == 'gameInfo') {
           gameInfo[id] = values;
+          totalGames = values;
         }
       });
 
       if (gameInfo.isNotEmpty) {
         _parseGameInfo(gameInfo);
+        _getStats(totalGames);
       }
     } catch (error) {
       throw error;
     }
+  }
+
+  void _getStats(List<dynamic> gameInfo) {
+
+    if (gameInfo.isEmpty) {
+      print('No games where foud in database for stats');
+      return;
+    }
+    _totalGoals = 0;
+    _totalGames = 0;
+
+    gameInfo.forEach((game)  {
+      _totalGames++;
+      _totalGoals += game['teamLeftGoals'] + game['teamRightGoals'];
+
+    });
+
   }
 
   void _parseGameInfo(Map<String, dynamic> gameInfo) {
@@ -229,8 +219,7 @@ class GamesPerDay with ChangeNotifier {
         });
       }
     });
-
-
+    
       _teamsOfTheDay.forEach((team) {
         if (team.id == 0) {
           team.goals = team1Goals;
@@ -244,42 +233,6 @@ class GamesPerDay with ChangeNotifier {
         }
       });
 
-  }
-
-  Future<void> fetchAndSetGames() async {
-    const url = 'https://indoor-soccer-log.firebaseio.com/games.json';
-    try {
-      final response = await http.get(url);
-      final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      final Map<DateTime, List<GameInfo>> games = {};
-
-      final Map<String, Map<String, List<dynamic>>> gamesData = {};
-
-      if (extractedData == null) {
-        return;
-      }
-      extractedData.forEach((gameId, gameInfo) {
-        List<GameInfo> gamesInfoList = [];
-        String id;
-        String winner;
-        var tempInfo = gameInfo['gameInfo'] as List<Object>;
-        tempInfo.forEach((item) => {
-              id = (item as Map<String, Object>)['id'],
-              //winner = (item as Map<String, Object>)['winner'],
-              //gamesInfoList.add(GameInfo(team1: SingleTeam(id))),
-              //id = (item as GameInfo).id,
-              //team1 = (item as GameInfo).team1.teamName,
-            });
-
-        games[DateTime.parse(gameInfo['date'] as String)] = List<GameInfo>();
-
-        //games[DateTime.parse(gameInfo['date'] as String)] = List.from(gameInfo['gameInfo'] as List<GameInfo>);
-      });
-      _allGames = games;
-      notifyListeners();
-    } catch (error) {
-      throw error;
-    }
   }
 
   void filterDayGames(int dayOfWeek) {

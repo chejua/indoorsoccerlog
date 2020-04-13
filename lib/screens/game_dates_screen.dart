@@ -55,7 +55,7 @@ class GameDatesScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
-                                      Colors.purple.withOpacity(0.7),
+                                      Colors.green.withOpacity(0.9),
                                       Colors.blue
                                     ],
                                     begin: Alignment.topLeft,

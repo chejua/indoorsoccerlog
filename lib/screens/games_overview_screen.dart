@@ -56,13 +56,16 @@ class GamesOverviewScreen extends StatelessWidget {
       ),
       drawer: GamesDrawer(),
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/images/soccer_bg.jpg'),
-              fit: BoxFit.fill),
-        ),
+        
+      //color: Color.fromRGBO(0, 96, 255, 1.0),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Soccer_Field_Transparant.svg/1200px-Soccer_Field_Transparant.svg.png'),
+          fit: BoxFit.cover
+          ),
+      ),
         child: Column(
-          children: <Widget>[
+          children: <Widget>[        
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Row(
