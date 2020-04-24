@@ -57,7 +57,7 @@ class GamesDetailInfo extends StatelessWidget {
                                             foreground: Paint()
                                               ..style = PaintingStyle.stroke
                                               ..strokeWidth = 6
-                                              ..color = Colors.blue[700],
+                                               ..color =  Colors.redAccent//Colors.blue[700],
                                           ),
                                         ),
                                         // Solid text as fill.
@@ -145,6 +145,6 @@ Widget _buildChipWithTotalInfo(String text) {
       text,
       style: TextStyle(fontSize: 25),
     ),
-    backgroundColor: Colors.blueAccent.shade400,
+    backgroundColor: Color(0xFFF44336),
   );
 }

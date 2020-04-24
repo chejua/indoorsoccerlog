@@ -55,8 +55,7 @@ class GamesOverviewScreen extends StatelessWidget {
         ],
       ),
       drawer: GamesDrawer(),
-      body: Container(
-        
+      body: Container(    
       //color: Color.fromRGBO(0, 96, 255, 1.0),
       decoration: BoxDecoration(
         image: DecorationImage(

@@ -10,6 +10,11 @@ class GamesRecord with ChangeNotifier {
     return [..._games];
   }
 
+  void deleteItemFromList(int index) {
+    _games.removeAt(index);
+    notifyListeners();
+  }
+
   void addGameRecord(GameInfo game) {
     _games.add(game);
     notifyListeners();

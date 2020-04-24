@@ -20,10 +20,8 @@ class GameResult extends StatelessWidget {
           title: Text('Game Stats'),
           content: Column(
             children: <Widget>[
-              Text(
-                  '${game.team1.teamName} : Goals # ${game.team1.goals}'),
-              Text(
-                  '${game.team2.teamName} : Goals # ${game.team2.goals}'),
+              Text('${game.team1.teamName} : Goals # ${game.team1.goals}'),
+              Text('${game.team2.teamName} : Goals # ${game.team2.goals}'),
               Text('Total time played: ${game.secondsPlayed}')
             ],
           ),
@@ -41,36 +39,28 @@ class GameResult extends StatelessWidget {
     );
   }
 
-  Widget test() {
-    return new Center(
-      child: new Container(
-          decoration: new BoxDecoration(
-            color: Colors.purple,
-            gradient: new LinearGradient(
-                colors: [
-                  Colors.red,
-                  Colors.cyan,
-                  Colors.purple,
-                  Colors.lightGreenAccent
-                ],
-                begin: Alignment.centerRight,
-                end: Alignment.centerLeft,
-                tileMode: TileMode.clamp,
-                stops: [0.3, 0.5, 0.6, 0.7]),
-          ),
-          child: new FlutterLogo(
-            size: 200.0,
-          )),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final games = Provider.of<GamesRecord>(context, listen: false).games;
     return Card(
-        elevation: 5,
-        child: Container(
-          height: 55,
+      elevation: 5,
+      child: Container(
+        height: 55,
+        child: Dismissible(
+          key: UniqueKey(),
+          direction: DismissDirection.endToStart,
+          background: Container(
+            alignment: Alignment.centerRight,
+            padding: EdgeInsets.only(right: 20.0),
+            color: Colors.red,
+            child: Icon(
+              Icons.delete,
+            ),
+          ),
+          onDismissed: (direction) {
+            Provider.of<GamesRecord>(context, listen: false)
+                .deleteItemFromList(index);
+          },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -94,12 +84,12 @@ class GameResult extends StatelessWidget {
               ),
               StackTeamSelector(games[index].winner, ratio: ratioSize),
               IconButton(
-                icon: Icon(Icons.info),
-                onPressed: () => _showAlertDialog(context, games[index])
-                
-              ),
+                  icon: Icon(Icons.info),
+                  onPressed: () => _showAlertDialog(context, games[index])),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

@@ -25,17 +25,19 @@ class GamesDrawer extends StatelessWidget {
       child: Drawer(
         child: Column(
           children: <Widget>[
-            Container(
-              height: 120,
-              width: double.infinity,
-              padding: EdgeInsets.all(20),
-              alignment: Alignment.centerLeft,
-              color: Theme.of(context).accentColor,
-              child: Text(
-                'Games',
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 30,
+            Expanded(
+              flex: 1,
+              child: Container(              
+                width: double.infinity,
+                padding: EdgeInsets.all(20),
+                alignment: Alignment.centerLeft,
+                color: Theme.of(context).accentColor,
+                child: Text(
+                  'Games',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 30,
+                  ),
                 ),
               ),
             ),
@@ -43,6 +45,7 @@ class GamesDrawer extends StatelessWidget {
               height: 20,
             ),
             Expanded(
+              flex: 2,
               child: buildListTile('Monday', Icons.calendar_today, () {
                 Navigator.of(context)
                     .pushNamed(GameDatesScreen.routeName, arguments: "Mondays");
@@ -52,6 +55,7 @@ class GamesDrawer extends StatelessWidget {
               color: Colors.grey,
             ),
             Expanded(
+              flex: 2,
               child: buildListTile('Wednesday', Icons.calendar_today, () {
                 Navigator.of(context).pushNamed(GameDatesScreen.routeName,
                     arguments: "Wednesdays");
